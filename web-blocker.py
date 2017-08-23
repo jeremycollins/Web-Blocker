@@ -1,16 +1,15 @@
 import time
 from datetime import datetime as dt
 
-hosts_temp = "hosts"
 hosts_path = r"/etc/hosts"
 redirect = "127.0.0.1"
-website_list = ["www.facebook.com", "facebook.com", "www.youtube.com", "youtube.com"]
+website_list = ["www.facebook.com", "facebook.com", "www.youtube.com", "youtube.com", "172.217.2.238"]
 
-# Set the working hours time (e.g. .day,8 and .day,16 for 8am-4pm)
+# If the time is between the working hours (8 and 16), append redirects to hosts file, else remove the redirects from the host file if they exist
 while True:
     if dt(dt.now().year,dt.now().month,dt.now().day,8) < dt.now() < dt(dt.now().year,dt.now().month,dt.now().day,16):
         print("Working hours...")
-        with open(hosts_temp, 'r+') as file:
+        with open(hosts_path, 'r+') as file:
             content = file.read()
             for website in website_list:
                 if website in content:
@@ -18,5 +17,12 @@ while True:
                 else:
                     file.write(redirect + " " + website + "\n")
     else:
+        with open(hosts_path, 'r+') as file:
+            content = file.readlines()
+            file.seek(0)
+            for line in content:
+                if not any(website in line for website in website_list):
+                    file.write(line)
+            file.truncate()
         print("Non-working hours...")
     time.sleep(5)
