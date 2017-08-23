@@ -1,0 +1,3 @@
+Program Architecture
+Linux and Mac: /etc/hosts
+Windows: C:\Windows\System32\drivers\etc
